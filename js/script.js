@@ -80,7 +80,8 @@ const defaultData = [
       time: '13:34',
       category: 'Sport',
       id: 9,
-      descr: 'Parij Olimpiadasida O‘zbekiston sharafini himoya qilgan Razambek Jamalov Dog‘istonga qaytdi.',
+      descr:
+        'Parij Olimpiadasida O‘zbekiston sharafini himoya qilgan Razambek Jamalov Dog‘istonga qaytdi.',
     },
     {
       img: '../img/sport/img5.jpg',
@@ -88,7 +89,8 @@ const defaultData = [
       time: '18:18',
       category: 'Sport',
       id: 10,
-      descr: 'Londonning “Chelsi” klubi o‘zining rasmiy sayti orqali “Atletiko” klubi futbolchisi Joau Feliksning transferini e’lon qildi.',
+      descr:
+        'Londonning “Chelsi” klubi o‘zining rasmiy sayti orqali “Atletiko” klubi futbolchisi Joau Feliksning transferini e’lon qildi.',
     },
   ],
   [
@@ -205,7 +207,7 @@ function dataFunc() {
             <p>${
               item.name.length > 35 ? item.name.slice(0, 35) + '...' : item.name
             }</p>
-            <p>Bugun, ${item.time}</p>
+            <p>${item.time}</p>
           </div>
         `;
           })
@@ -253,7 +255,7 @@ function renderNavItems(item, index) {
                   ? newsItem.name.slice(0, 35) + '...'
                   : newsItem.name
               }</p>
-              <p>Bugun, ${newsItem.time}</p>
+              <p>${newsItem.time}</p>
             </div>
           `
             )
@@ -262,7 +264,7 @@ function renderNavItems(item, index) {
       `;
       document.querySelectorAll('.news-div-item-category').forEach((item) => {
         item.addEventListener('click', () => {
-          const itemId = item.id; 
+          const itemId = item.id;
           const data = JSON.parse(localStorage.getItem('data'));
 
           const newsItem = data.flat().find((news) => news.id == itemId);
@@ -331,7 +333,7 @@ searchBtn.addEventListener('click', () => {
           <p>${
             item.name.length > 35 ? item.name.slice(0, 35) + '...' : item.name
           }</p>
-          <p>Bugun, ${item.time}</p>
+          <p>${item.time}</p>
         </div>
       `
         )
@@ -341,10 +343,9 @@ searchBtn.addEventListener('click', () => {
       : `<p>Natija topilmadi.</p>`;
   document.querySelectorAll('.news-div-item-search').forEach((item) => {
     item.addEventListener('click', () => {
-      const itemId = item.id; 
+      const itemId = item.id;
       const data = JSON.parse(localStorage.getItem('data'));
       console.log(itemId);
-
 
       const newsItem = data.flat().find((news) => news.id == itemId);
 
@@ -383,10 +384,74 @@ window.addEventListener('click', (event) => {
 });
 
 document.querySelector('.enter-admin-panel').addEventListener('click', (e) => {
-  e.preventDefault()
+  e.preventDefault();
   if (formInp1.value === 'davlatbek' && formInp2.value === '38FSskdj') {
     document.querySelector('.admin-panel').classList.add('admin-active');
     registerModal.style.display = 'none';
+  }
+});
+let selectedText = "O'zbekiston";
+const selectElement = document.querySelector('select');
+
+selectElement.addEventListener('change', function() {
+  const selectedValue = selectElement.value;
+
+  // faqat 'option1' tanlanganida
+  if (selectedValue === 'opt-1') {
+   selectedText = "O'zbekiston"
+  }  
+  if (selectedValue === 'opt-2') {
+    selectedText = "Sport"
+   }
+   if (selectedValue === 'opt-3') {
+    selectedText = "Fan va Texnika"
+   }
+   if (selectedValue === 'opt-4') {
+    selectedText = "So'ngi yangiliklar"
+   }
+   if (selectedText == "O'zbekiston") {
+    addNews(
+      document.querySelector('.add-btn1'),
+      0,
+      document.querySelector('#add-uzb'),
+      document.querySelector('#add-uzb2'),
+      document.querySelector('#add-uzb2'),
+      selectedText,
+      document.querySelector('#add-uzb6')
+    );
+  }
+  if (selectedText == 'Sport') {
+    addNews(
+      document.querySelector('.add-btn1'),
+      1,
+      document.querySelector('#add-uzb'),
+      document.querySelector('#add-uzb2'),
+      document.querySelector('#add-uzb2'),
+      selectedText,
+      document.querySelector('#add-uzb6')
+    );
+  }
+  if (selectedText == 'Fan va Texnika') {
+    addNews(
+      document.querySelector('.add-btn1'),
+      2,
+      document.querySelector('#add-uzb'),
+      document.querySelector('#add-uzb2'),
+      document.querySelector('#add-uzb2'),
+      selectedText,
+      document.querySelector('#add-uzb6')
+    );
+  }
+  if (selectedText == "So'ngi yangiliklar") {
+    addNews(
+      document.querySelector('.add-btn1'),
+      3,
+      document.querySelector('#add-uzb'),
+      document.querySelector('#add-uzb2'),
+      document.querySelector('#add-uzb2'),
+      selectedText,
+      document.querySelector('#add-uzb6')
+    );
   }
 });
 
@@ -395,83 +460,36 @@ function addNews(
   categoryIndex,
   imgInput,
   nameInput,
-  timeInput,
   idInput,
-  categoryInput,
+  category,
   descriptionInput
 ) {
   btn.addEventListener('click', () => {
     if (
       imgInput.value !== '' &&
       nameInput.value !== '' &&
-      timeInput.value !== '' &&
-      idInput.value !== '' &&
-      categoryInput.value !== ''&&
+      category.value !=='tanlang' &&
       descriptionInput.value !== ''
-
-
     ) {
       document.querySelector('.admin-panel').classList.remove('admin-active');
       const storedData =
-      JSON.parse(localStorage.getItem('data')) || defaultData;
+        JSON.parse(localStorage.getItem('data')) || defaultData;
       storedData[categoryIndex].push({
         img: imgInput.value,
         name: nameInput.value,
-        time: timeInput.value,
-        id: idInput.value,
-        category: categoryInput.value,
+        time: `${String(new Date().getDay()).length ==1 ? `0${new Date().getDay()}` : new Date().getDay() }.${String(new Date().getMonth()+1).length ==1 ? `0${new Date().getMonth()+1}` : new Date().getMonth+1() }.${new Date().getFullYear()}, ${new Date().getHours()}:${new Date().getMinutes()}`,
+        id: String(idInput.value).slice(0, 10) + Math.floor(Math.random()*99),
+        category : category,
         descr: descriptionInput.value,
       });
       localStorage.setItem('data', JSON.stringify(storedData));
       dataFunc();
       renderLastNews();
-      location.reload()
+      location.reload();
     }
   });
 }
 
-addNews(
-  document.querySelector('.add-btn1'),
-  0,
-  document.querySelector('#add-uzb'),
-  document.querySelector('#add-uzb2'),
-  document.querySelector('#add-uzb3'),
-  document.querySelector('#add-uzb4'),
-  document.querySelector('#add-uzb5'),
-  document.querySelector('#add-uzb6')
-);
-addNews(
-  document.querySelector('.add-btn2'),
-  1,
-  document.querySelector('#add-sport'),
-  document.querySelector('#add-sport2'),
-  document.querySelector('#add-sport3'),
-  document.querySelector('#add-sport4'),
-  document.querySelector('#add-sport5'),
-  document.querySelector('#add-sport6')
-);
-addNews(
-  document.querySelector('.add-btn3'),
-  2,
-  document.querySelector('#add-fan'),
-  document.querySelector('#add-fan2'),
-  document.querySelector('#add-fan3'),
-  document.querySelector('#add-fan4'),
-  document.querySelector('#add-fan5'),
-  document.querySelector('#add-fan6')
-
-);
-addNews(
-  document.querySelector('.add-btn4'),
-  3,
-  document.querySelector('#add-yangiliklar'),
-  document.querySelector('#add-yangiliklar2'),
-  document.querySelector('#add-yangiliklar3'),
-  document.querySelector('#add-yangiliklar4'),
-  document.querySelector('#add-yangiliklar5'),
-  document.querySelector('#add-yangiliklar6')
-
-);
 
 document.querySelector('.logo').addEventListener('click', () => {
   location.reload();
@@ -479,7 +497,7 @@ document.querySelector('.logo').addEventListener('click', () => {
 
 document.querySelectorAll('.news-div-item').forEach((item) => {
   item.addEventListener('click', () => {
-    const itemId = item.id; 
+    const itemId = item.id;
     const data = JSON.parse(localStorage.getItem('data'));
 
     const newsItem = data.flat().find((news) => news.id == itemId);
